@@ -25,7 +25,7 @@ public class Solution2056 {
         reader.close();
         file.close();
 
-        ArrayList<Map.Entry<String,Integer>> list = new ArrayList(map.entrySet());
+        List<Map.Entry<String,Integer>> list = new ArrayList(map.entrySet());
         list.sort((o1, o2) -> o1.getKey().compareTo(o2.getKey()));
         FileWriter writer = new FileWriter("output.txt", false);
         for (Map.Entry<String, Integer> pair : list) {
