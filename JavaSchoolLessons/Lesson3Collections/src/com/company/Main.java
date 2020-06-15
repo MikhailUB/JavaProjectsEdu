@@ -18,8 +18,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         //task1();
-        task2();
-        //task3();
+        //task2();
+        task3();
         //task4();
         //task5();
         //task6();
@@ -94,9 +94,7 @@ public class Main {
         scanner.close();
         file.close();
         System.out.println("Задание 3. количество каждого слова");
-        for (Map.Entry<String, Integer> entry : wordsCounts.entrySet()) {
-            System.out.printf("%s = %d\n", entry.getKey(), entry.getValue());
-        }
+        wordsCounts.forEach((k, v) -> System.out.printf("%s = %d\n", k, v));
     }
 
     private static void task4() throws IOException {
@@ -131,7 +129,6 @@ public class Main {
         while (iterator.hasNext()) {
             System.out.println(iterator.next());
         }
-
     }
 
     private static void task6() throws IOException {
