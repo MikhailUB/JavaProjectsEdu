@@ -10,11 +10,13 @@ public class Main {
 
     public static void main(String[] args) {
         // пример использования CountMap
-        CountMap<Number> map = new CountMapIml<>();
+        CountMap<Integer> map = new CountMapIml<>();
 
+        ArrayList<Integer> integers = new ArrayList<>();
+        integers.toArray();
         map.add(10);
         map.add(10);
-        map.add(10.5);
+        map.add(10);
         map.add(5);
         map.add(5);
         map.add(6);
@@ -28,9 +30,9 @@ public class Main {
         map1.add(1);
         map.addAll(map1);
 
-        Map<Integer, Integer> dest = new HashMap<>();
         map.toMap().forEach((k, v) -> System.out.println(k + " " + v));
 
+        Map<Number, Integer> dest = new HashMap<>();
         map1.toMap(dest);
         dest.forEach((k, v) -> System.out.println(k + " " + v));
     }

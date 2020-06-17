@@ -1,8 +1,6 @@
 package com.company;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CountMapIml<T> implements CountMap<T> {
 
@@ -12,8 +10,6 @@ public class CountMapIml<T> implements CountMap<T> {
     @Override
     public void add(T o) {
         mapData.put(o, getCount(o) + 1);
-        //HashMap<String, Integer> hashMap = new HashMap<>();
-        //hashMap.put();
     }
 
     //Возвращает количество добавлений данного элемента
@@ -25,7 +21,7 @@ public class CountMapIml<T> implements CountMap<T> {
     //Удаляет элемент и контейнера и возвращает количество его добавлений (до удаления)
     @Override
     public int remove(T o) {
-        return remove(o);
+        return mapData.remove(o);
     }
 
     //количество разных элементов
@@ -37,7 +33,7 @@ public class CountMapIml<T> implements CountMap<T> {
     //Добавить все элементы из source в текущий контейнер, при совпадении ключей, суммировать значения
     @Override
     public void addAll(CountMap<? extends T> source) {
-        source.toMap().forEach((k, v) -> mapData.merge((T)k, (Integer) v, (oldV, newV) -> oldV + newV));
+        source.toMap().forEach((k, v) -> mapData.merge(k, v, (oldV, newV) -> oldV + newV));
     }
 
     //Вернуть java.util.Map. ключ - добавленный элемент, значение - количество его добавлений
@@ -49,7 +45,7 @@ public class CountMapIml<T> implements CountMap<T> {
 
     //Тот же самый контракт как и toMap(), только всю информацию записать в destination
     @Override
-    public void toMap(Map<T, Integer> destination) {
+    public void toMap(Map<? super T, Integer> destination) {
         destination.clear();
         mapData.forEach((k, v) -> destination.put(k, v));
     }

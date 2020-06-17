@@ -24,5 +24,5 @@ public interface CountMap<T> {
     Map<T, Integer> toMap();
 
     //Тот же самый контракт как и toMap(), только всю информацию записать в destination
-    void toMap(Map<T, Integer> destination);
+    void toMap(Map<? super T, Integer> destination);
 }
