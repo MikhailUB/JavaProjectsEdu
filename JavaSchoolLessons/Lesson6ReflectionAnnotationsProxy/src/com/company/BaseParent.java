@@ -5,7 +5,7 @@ import java.util.*;
 public class BaseParent {
     public static final String MONDAY = "MONDAY";
     public static final String TUESDAY = "Tuesday";
-    public static final String WEDNESDAY = "WEDNESDAY";
+    public final String WEDNESDAY = "WEDNESDAY";
     public static final int CONST_INT = 999;
 
     private UUID id;

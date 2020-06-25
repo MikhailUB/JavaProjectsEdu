@@ -1,7 +1,7 @@
 package com.company;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
+
 /*
 1. Вывести на консоль все методы класса, включая все родительские методы (включая приватные)
 2. Вывести все геттеры класса
@@ -16,9 +16,11 @@ public static final String MONDAY = "MONDAY";
 */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException {
         //task1();
-        task2();
+        //task2();
+        //task3();
+        task4();
     }
 
     // 1. Вывести на консоль все методы класса, включая все родительские методы (включая приватные)
@@ -37,11 +39,12 @@ public class Main {
         }
     }
 
+    // 2. Вывести все геттеры класса
     private static void task2() {
         System.out.println("2. Выводим геттеры");
         BaseParent parent = new BaseParent("Михаил");
         Class<? extends BaseParent> clazz = parent.getClass();
-        Field[] fields = clazz.getDeclaredFields();
+
         for (Field field : clazz.getDeclaredFields()) {
             try {
                 Method method = clazz.getDeclaredMethod("get" + firstUpperCase(field.getName()));
@@ -53,5 +56,37 @@ public class Main {
 
     public static String firstUpperCase(String word){
         return word.substring(0, 1).toUpperCase() + word.substring(1);
+    }
+
+    // 3. Проверить что все String константы имеют значение = их имени
+    // public static final String MONDAY = "MONDAY";
+    private static void task3() throws ClassNotFoundException, IllegalAccessException {
+        System.out.println("3. проверяем String константы");
+        ChildClass child = new ChildClass("Михаил");
+        Class<? extends ChildClass> clazz = child.getClass();
+
+        System.out.println("Класс " + clazz.getSimpleName() + " имеет строковые константы:");
+        for (Field field : clazz.getFields()) {
+            int modifiers = field.getModifiers();
+            if ((modifiers & Modifier.FINAL) != 0 && field.getType() == Class.forName("java.lang.String")) {
+                String fName = field.getName();
+                String fValue = (String)field.get(child);
+                String equal = fName.equals(fValue) ? " == " : " != ";
+                System.out.println("Константа " + fName + equal + fValue);
+            }
+        }
+    }
+
+    private static void task4()
+    {
+        Calculator calculator = new CalculatorImpl();
+        Handler handler = new Handler(calculator);
+        Calculator proxy = (Calculator) Proxy.newProxyInstance(Calculator.class.getClassLoader(), new Class[] { Calculator.class }, handler);
+        System.out.println(proxy.Plus(18));
+        System.out.println(proxy.Minus(18));
+        System.out.println(proxy.Plus(18));
+        System.out.println(proxy.Minus(18));
+        System.out.println(proxy.Plus(15));
+        System.out.println(proxy.Minus(15));
     }
 }
