@@ -19,7 +19,7 @@ public class Main {
     public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException {
         //task1();
         //task2();
-        //task3();
+        task3();
         task4();
     }
 
@@ -68,7 +68,7 @@ public class Main {
         System.out.println("Класс " + clazz.getSimpleName() + " имеет строковые константы:");
         for (Field field : clazz.getFields()) {
             int modifiers = field.getModifiers();
-            if ((modifiers & Modifier.FINAL) != 0 && field.getType() == Class.forName("java.lang.String")) {
+            if ((modifiers & Modifier.FINAL) != 0 && field.getType() == String.class) {
                 String fName = field.getName();
                 String fValue = (String)field.get(child);
                 String equal = fName.equals(fValue) ? " == " : " != ";
@@ -77,6 +77,7 @@ public class Main {
         }
     }
 
+    // 4. Реализовать кэширующий proxy
     private static void task4()
     {
         Calculator calculator = new CalculatorImpl();
