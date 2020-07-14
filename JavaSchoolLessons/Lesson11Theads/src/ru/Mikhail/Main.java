@@ -1,19 +1,34 @@
 package ru.Mikhail;
 
+import java.util.*;
+import java.util.concurrent.*;
+
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException {
-        ThreadPool threadPool = new FixedThreadPool(8);
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+
+        //testThreadPool(new FixedThreadPool(8));
+
+        testThreadPool(new ScalableThreadPool(8, 16));
+    }
+
+    private static void testThreadPool(ThreadPool threadPool) throws InterruptedException, ExecutionException{
         threadPool.start();
         Counter counter = new Counter();
 
-        for (int i = 0; i < 400; i++) {
+        List<Future<Double>> futures = new ArrayList<>();
+        for (int i = 0; i < 200; i++) {
             final int j = i;
-            threadPool.execute(() -> counter.count(j));
+            CompletableFuture<Double> complFuture = CompletableFuture.supplyAsync(() -> counter.count(j), threadPool);
+            futures.add(complFuture);
+            if (i % 50 == 0)
+                Thread.sleep(3600);
         }
 
-        while (threadPool.hasTasks())
-            Thread.sleep(500);
+        double value = 0;
+        for (Future<Double> future : futures) {
+            value += future.get();
+        }
 
         threadPool.stop();
     }

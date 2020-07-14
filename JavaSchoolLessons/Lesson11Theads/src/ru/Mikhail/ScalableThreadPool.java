@@ -1,40 +1,38 @@
 package ru.Mikhail;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-public class ScalableThreadPool implements ThreadPool {
-    private final Queue<Runnable> workQueue = new ConcurrentLinkedQueue<>();
-    private final int minThreads;
+public class ScalableThreadPool extends FixedThreadPool {
     private final int maxThreads;
-    private volatile boolean isRunning = true;
+    private int actualThreads;
 
     public ScalableThreadPool(int minThreads, int maxThreads) {
-        this.minThreads = minThreads;
+        super(minThreads);
         this.maxThreads = maxThreads;
+        actualThreads = minThreads;
     }
 
-    @Override
-    public boolean hasTasks() {
-        return !workQueue.isEmpty();
-    }
-
-    @Override
-    public void start() {
-        for (int i = 0; i < minThreads; i++) {
+    private synchronized void tryAddWorker() {
+        if (actualThreads < maxThreads && actualThreads < workQueue.size()) {
             new Thread(new TaskWorker()).start();
+            actualThreads++;
+            System.out.println("actualThreads = " + actualThreads);
         }
+    }
+
+    private synchronized boolean canStopWorker() {
+        if (actualThreads > threadsCount) {
+            actualThreads--;
+            System.out.println("actualThreads = " + actualThreads);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void execute(Runnable command) {
-        if (isRunning)
+        if (isRunning) {
             workQueue.offer(command);
-    }
-
-    @Override
-    public void  stop() {
-        isRunning = false;
+            tryAddWorker();
+        }
     }
 
     private final class TaskWorker implements Runnable {
@@ -44,6 +42,8 @@ public class ScalableThreadPool implements ThreadPool {
                 Runnable newTask = workQueue.poll();
                 if (newTask != null)
                     newTask.run();
+                else if (canStopWorker())
+                    return; // завершение worker-а и его потока
             }
         }
     }

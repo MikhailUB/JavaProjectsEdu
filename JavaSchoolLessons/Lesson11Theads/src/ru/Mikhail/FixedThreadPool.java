@@ -4,17 +4,12 @@ import java.util.Queue;
 import java.util.concurrent.*;
 
 public class FixedThreadPool implements ThreadPool {
-    private final Queue<Runnable> workQueue = new ConcurrentLinkedQueue<>();
-    private final int threadsCount;
-    private volatile boolean isRunning = true;
+    protected final Queue<Runnable> workQueue = new ConcurrentLinkedQueue<>();
+    protected final int threadsCount;
+    protected volatile boolean isRunning = true;
 
     public FixedThreadPool(int threadsCount) {
         this.threadsCount = threadsCount;
-    }
-
-    @Override
-    public boolean hasTasks() {
-        return !workQueue.isEmpty();
     }
 
     @Override
