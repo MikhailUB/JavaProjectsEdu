@@ -30,7 +30,7 @@ public class App {
     private static void initDatabase(AnnotationConfigApplicationContext context) {
         // добавляем одно блюдо
         Dish dish = new Dish(1, "Солянка сборная мясная");
-        List<Ingredient> ingredients = new ArrayList<Ingredient>();
+        List<Ingredient> ingredients = new ArrayList<>();
         ingredients.add(new Ingredient(dish.getId(), "Оливки", 100));
         ingredients.add(new Ingredient(dish.getId(), "Огурцы маринованные", 150));
         ingredients.add(new Ingredient(dish.getId(), "Говядина", 200));
@@ -38,7 +38,7 @@ public class App {
 
         // добавляем второе блюдо
         dish = new Dish(2, "Мясная тарелка");
-        ingredients = new ArrayList<Ingredient>();
+        ingredients = new ArrayList<>();
         ingredients.add(new Ingredient(dish.getId(), "Свинина отварная", 250));
         ingredients.add(new Ingredient(dish.getId(), "Говядина копченая", 250));
         addDish(context, dish, ingredients);
