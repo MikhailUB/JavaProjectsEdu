@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Калькулятор</title>
+</head>
+<body>
+    <form method="GET">
+        <label>Аргумент 1</label>
+        <input type="number" step="0.01" name="arg1" /><br/>
+
+        <label>Аргумент 2</label>
+        <input type="number" step="0.01" name="arg2" /><br/>
+
+        <label>Операция</label>
+        <input type="text" name="operation" />
+        <label>(plus, minus, multiply, division)</label><br/>
+        <br/>
+        <input type="submit" /><br/>
+    </form>
+    <br/>
+    <p>Результат = <span th:Text="${result}"/></p>
+    <p th:Text="${error}"/>
+</body>
+</html>
