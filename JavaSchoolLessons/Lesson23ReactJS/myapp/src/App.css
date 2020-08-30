@@ -10,7 +10,7 @@
   width: 306px;
   height: 306px;
   border: 2px solid red;
-  margin: 50px auto;
+  margin: 20px auto;
   display: flex;
   flex-wrap: wrap;
 }
@@ -21,4 +21,19 @@
   border: 1px solid green;
   display: flex;
   justify-content: center;
+  align-items: center;
+  font-size: 60px;
+}
+
+.new-game {
+  border: 2px solid blue;
+  background-color: lightskyblue;
+  margin: 15px auto;
+  padding: 10px;
+  text-align: center;
+}
+
+.current-play {
+  margin: 5px auto;
+  text-align: center;
 }
