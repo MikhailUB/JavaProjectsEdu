@@ -22,7 +22,7 @@ public class MessageController {
         this.messageRepo = messageRepo;
     }
 
-    @GetMapping
+    @GetMapping("/main")
     public String main(Map<String, Object> model) {
 
         findAllAndPutMessagesToModel(model);
@@ -33,7 +33,7 @@ public class MessageController {
         model.put("messages", messageRepo.findAll());
     }
 
-    @PostMapping
+    @PostMapping("/main")
     public String add(@RequestParam String text, @RequestParam String tag, Map<String, Object> model) {
 
         Message message = new Message(text, tag);
@@ -44,14 +44,14 @@ public class MessageController {
     }
 
     @GetMapping("filter")
-    public String filter(@RequestParam String tag, Model model) {
+    public String filter(@RequestParam String tag, Map<String, Object> model) {
         Iterable<Message> messages;
         if (tag == null || tag.isEmpty())
             messages = messageRepo.findAll();
         else
             messages = messageRepo.findByTag(tag);
 
-        model.addAttribute("messages", messages);
+        model.put("messages", messages);
 
         return "main";
     }
