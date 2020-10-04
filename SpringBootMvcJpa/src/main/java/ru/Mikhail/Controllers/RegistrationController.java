@@ -26,9 +26,16 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(User user, Map<String, Object> model) {
+
+        if (user.getUsername() == null || user.getUsername().isEmpty() ||
+                user.getPassword() == null || user.getPassword().isEmpty()) {
+
+            model.put("message", "ERROR! Username and password cannot be empty!");
+            return "registration";
+        }
         User existUser = userRepo.findByUsername(user.getUsername());
         if (existUser != null) {
-            model.put("message", "User exists!");
+            model.put("message", "ERROR! User exists!");
             return "registration";
         }
         user.setActive(true);
