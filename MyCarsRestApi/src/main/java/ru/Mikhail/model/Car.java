@@ -1,7 +1,15 @@
-package ru.Mikhail.dao;
+package ru.Mikhail.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Car {
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     private String model;
     private Integer maxSpeed;
     private Integer mileage;
@@ -9,18 +17,17 @@ public class Car {
     public Car() {
     }
 
-    public Car(long id, String model, int maxSpeed, int mileage) {
-        this.id = id;
+    public Car(String model, Integer maxSpeed, Integer mileage) {
         this.model = model;
         this.maxSpeed = maxSpeed;
         this.mileage = mileage;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
