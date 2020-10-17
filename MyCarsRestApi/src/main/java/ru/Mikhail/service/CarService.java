@@ -22,11 +22,13 @@ public class CarService {
     }
 
     public Page<Car> findAll(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.ASC, "id");
-        Pageable pageable = size > 0 ? PageRequest.of(page, size, sort) : Pageable.unpaged();
-        Page<Car> resultPage = carRepository.findAll(pageable);
-        if (page < resultPage.getTotalPages()) {
-            return resultPage;
+        if (page > -1) {
+            Sort sort = Sort.by(Sort.Direction.ASC, "id");
+            Pageable pageable = size > 0 ? PageRequest.of(page, size, sort) : Pageable.unpaged();
+            Page<Car> resultPage = carRepository.findAll(pageable);
+            if (page < resultPage.getTotalPages()) {
+                return resultPage;
+            }
         }
         throw new NotFoundException("Индекс страницы должен быть меньше количества страниц");
     }
