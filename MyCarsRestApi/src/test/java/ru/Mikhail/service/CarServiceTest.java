@@ -1,3 +1,4 @@
+/*
 package ru.Mikhail.service;
 
 import org.junit.Test;
@@ -47,3 +48,4 @@ public class CarServiceTest {
     public void delete() {
     }
 }
+ */
