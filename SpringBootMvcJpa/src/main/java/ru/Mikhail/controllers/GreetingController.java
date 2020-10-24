@@ -1,4 +1,4 @@
-package ru.Mikhail.Controllers;
+package ru.Mikhail.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
