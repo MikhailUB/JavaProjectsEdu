@@ -1,5 +1,6 @@
 package org.mikhail.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.mikhail.exception.*;
 import org.mikhail.model.*;
 import org.mikhail.modelApi.MailingHistoryApi;
@@ -12,13 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 /**
  * Сервис реализующий всю логику по работе с отправлениями
  * создание, передвижения, выдача, получение истории
  * обрабатывает вызовы от контроллера, оперирует данными через репозитории,
  * обрабатывает их и возвращает результат контроллеру
  */
+@Slf4j
 @Service
 public class MailingServiceImpl implements MailingService {
     private final MailingRepository mailingRepository;
@@ -38,7 +39,7 @@ public class MailingServiceImpl implements MailingService {
     @Override
     @Transactional
     public Mailing create(Mailing mailing){
-        final Operation register = Operation.REGISTRATION;
+        log.info("IN MailingServiceImpl create {}", mailing);
 
         List<String> notZips = new ArrayList<>();
         PostOffice startOffice = officeRepository.findByZipCode(mailing.getStartOfficeZip());
@@ -59,30 +60,25 @@ public class MailingServiceImpl implements MailingService {
         mailing.setRecipientOffice(recipientOffice);
         mailing = mailingRepository.save(mailing);
 
+        final Operation register = Operation.REGISTRATION;
         MailingMovement movement = new MailingMovement(mailing, startOffice, null, register);
         movementRepository.save(movement);
 
         return mailing;
     }
 
-    private void checkExistsZipCodes(String[] zipCodes) {
-        Set<String> notZips = Arrays.stream(zipCodes)
-                .filter(zip -> officeRepository.findByZipCode(zip) == null)
-                .collect(Collectors.toSet());
-        if (!notZips.isEmpty())
-            throw new BadRequestException("Не найдены отделения с индексами " + String.join(",", notZips));
-    }
-
     @Override
     public List<Mailing> findAll() {
+        log.info("IN MailingServiceImpl findAll");
         return mailingRepository.findAll();
     }
 
     @Override
     public MailingMovement send(MovementApi movement) {
-        final Operation departure = Operation.DEPARTURE;
+        log.info("IN MailingServiceImpl send {}", movement);
 
         movementValidator.validate(movement, true);
+        final Operation departure = Operation.DEPARTURE;
 
         MailingMovement result = new MailingMovement(movementValidator.getMailing(), movementValidator.getCurrentOffice(),
                 movementValidator.getNextOffice(), departure);
@@ -93,9 +89,10 @@ public class MailingServiceImpl implements MailingService {
 
     @Override
     public MailingMovement accept(MovementApi movement) {
-        final Operation arrival = Operation.ARRIVAL;
+        log.info("IN MailingServiceImpl accept {}", movement);
 
         movementValidator.validate(movement, false);
+        final Operation arrival = Operation.ARRIVAL;
 
         MailingMovement result = new MailingMovement(movementValidator.getMailing(), movementValidator.getCurrentOffice(),
                 movementValidator.getNextOffice(), arrival);
@@ -106,9 +103,10 @@ public class MailingServiceImpl implements MailingService {
 
     @Override
     public MailingMovement deliver(MovementApi movement) {
-        final Operation delivery = Operation.DELIVERY;
+        log.info("IN MailingServiceImpl deliver {}", movement);
 
         movementValidator.validate(movement, false);
+        final Operation delivery = Operation.DELIVERY;
 
         MailingMovement result = new MailingMovement(movementValidator.getMailing(), movementValidator.getCurrentOffice(),
                 movementValidator.getNextOffice(), delivery);
@@ -119,11 +117,12 @@ public class MailingServiceImpl implements MailingService {
 
     @Override
     public MailingHistoryApi getHistory(Long mailingId) {
+        log.info("IN MailingServiceImpl getHistory {}", mailingId);
 
         List<MailingMovement> list = movementRepository.findAllByMailingId(mailingId);
-
         Mailing mailing = null;
         MailingStatus status = MailingStatus.NOT_FOUND;
+
         if (!list.isEmpty()) {
             MailingMovement lastMovement = list.get(0);
             mailing = lastMovement.getMailing();
@@ -144,8 +143,7 @@ public class MailingServiceImpl implements MailingService {
                 status = MailingStatus.IN_TRANSIT;
             }
         }
-        MailingHistoryApi result = new MailingHistoryApi(mailing, status, list);
-        return result;
+        return new MailingHistoryApi(mailing, status, list);
     }
 
     @Override
